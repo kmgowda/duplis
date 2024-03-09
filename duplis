@@ -82,9 +82,9 @@ def parse_nm(nm_cmd, prefix, i_file, tmp_file, nm_out_file):
         # end of file is reached
         if not line:
             break
-        arr = line.split(' ', 3)
+        arr = line.split(' ', 2)
         try:
-            sym = arr[2].strip()
+            sym = arr[2].strip('\n')
         except:
             pass
         file2.write(sym)
@@ -140,9 +140,6 @@ def find_duplicate_symbol(symbol, from_file, ldd_file, nm_cmd, prefix, out_fd):
         if is_first and ret:
             is_first = False
     file1.close()
-    os.remove(NM_TMP_FILE)
-
-
 
 def duplis():
     parser = argparse.ArgumentParser(description='duplis',
@@ -161,18 +158,18 @@ def duplis():
         print(LDD_FILE + " is missing, exiting!")
         exit(1)
     if os.path.isfile(NM_FILE) is False:
-        print(LDD_FILE + " is missing, exiting!")
+        print(NM_FILE + " is missing, exiting!")
         exit(1)
 
     ldd_cmd = None
-    with open('LDD_FILE') as f:
+    with open(LDD_FILE) as f:
         ldd_cmd = f.readline().strip('\n')
     if not ldd_cmd:
         print("ldd command is missing in " + LDD_FILE + ",  exiting!")
         exit(2)
 
     nm_cmd = None
-    with open('NM_FILE') as f:
+    with open(NM_FILE) as f:
         nm_cmd = f.readline().strip('\n')
     if not nm_cmd:
         print("nm command is missing in " + NM_FILE + ",  exiting!")
