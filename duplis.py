@@ -59,7 +59,7 @@ def parse_ldd(ldd_cmd, i_file, tmp_file, ldd_out_file, do_print=False):
     os.remove(TMP_FILE)
 
 
-def parse_nm(nm_cmd, prefix, i_file, tmp_file, nm_out_file, do_print=False):
+def parse_nm(nm_cmd, grep_word, i_file, tmp_file, nm_out_file, do_print=False):
     if os.path.isfile(i_file) is False:
         print("file " + i_file + " not found!")
         return
@@ -67,10 +67,10 @@ def parse_nm(nm_cmd, prefix, i_file, tmp_file, nm_out_file, do_print=False):
         os.remove(tmp_file)
     except:
         pass
-    if prefix is None or prefix == "":
+    if grep_word is None or grep_word == "":
         cmd = nm_cmd + " " + i_file + " > " + tmp_file
     else:
-        cmd = nm_cmd + " " + i_file + " | grep " + prefix + " > " + tmp_file
+        cmd = nm_cmd + " " + i_file + " | grep " + grep_word + " > " + tmp_file
     if do_print:
         print("nm cmd : " + cmd)
     os.system(cmd)
@@ -122,7 +122,7 @@ def find_symbol_from_file(symbol, from_file, nm_file, lib_file, out_fd, is_first
     return found
 
 
-def find_symbol(symbol, from_file, lib_file, nm_cmd, prefix, out_fd, is_first):
+def find_symbol(symbol, from_file, lib_file, nm_cmd, grep_word, out_fd, is_first):
     if os.path.isfile(lib_file) is False:
         print("file " + lib_file + " not found!")
         return False
@@ -130,7 +130,7 @@ def find_symbol(symbol, from_file, lib_file, nm_cmd, prefix, out_fd, is_first):
         os.remove(NM_TMP_FILE)
     except:
         pass
-    parse_nm(nm_cmd, prefix, lib_file, TMP_FILE, NM_TMP_FILE)
+    parse_nm(nm_cmd, grep_word, lib_file, TMP_FILE, NM_TMP_FILE)
     if os.path.isfile(NM_TMP_FILE) is False:
         print("file " + NM_TMP_FILE + " not created!")
         return False
@@ -139,7 +139,7 @@ def find_symbol(symbol, from_file, lib_file, nm_cmd, prefix, out_fd, is_first):
     return found
 
 
-def find_duplicate_symbol(symbol, from_file, ldd_file, nm_cmd, prefix, out_fd):
+def find_duplicate_symbol(symbol, from_file, ldd_file, nm_cmd, grep_word, out_fd):
     if os.path.isfile(ldd_file) is False:
         print("file " + ldd_file + " not found!")
         return
@@ -149,7 +149,7 @@ def find_duplicate_symbol(symbol, from_file, ldd_file, nm_cmd, prefix, out_fd):
         line = file1.readline().strip('\n')
         if not line:
             break
-        ret = find_symbol(symbol, from_file, line, nm_cmd, prefix, out_fd, is_first)
+        ret = find_symbol(symbol, from_file, line, nm_cmd, grep_word, out_fd, is_first)
         if is_first and ret:
             is_first = False
     file1.close()
@@ -218,7 +218,7 @@ def duplis():
         pass
 
     if args.lfile:
-        parse_nm(nm_cmd, args.prefix, args.lfile, TMP_FILE, LIB_NM_OUT_FILE)
+        parse_nm(nm_cmd, args.grep, args.lfile, TMP_FILE, LIB_NM_OUT_FILE)
         if os.path.isfile(LIB_NM_OUT_FILE) is False:
             print("file " + LIB_NM_OUT_FILE + " not created!")
             exit(4)
