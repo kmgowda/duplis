@@ -110,6 +110,7 @@ def find_symbol_from_file(symbol, from_file, nm_file, lib_file, out_fd, is_first
             break
         if symbol.endswith(line):
             if is_first:
+                out_fd.write('\n')
                 out_fd.write(symbol)
                 out_fd.write('\n\t\t')
                 out_fd.write(from_file)
