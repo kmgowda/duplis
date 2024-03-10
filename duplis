@@ -38,7 +38,7 @@ def parse_ldd(ldd_cmd, i_file, tmp_file, ldd_out_file):
 
     while True:
         # Get next line from file
-        line = file1.readline()
+        line = file1.readline().strip('\n')
 
         # if line is empty
         # end of file is reached
@@ -84,7 +84,7 @@ def parse_nm(nm_cmd, prefix, i_file, tmp_file, nm_out_file):
             break
         arr = line.split(' ', 2)
         try:
-            sym = arr[2].strip('\n')
+            sym = arr[2].strip()
         except:
             pass
         file2.write(sym)
@@ -107,12 +107,12 @@ def find_symbol(symbol, from_file, lib_file, nm_cmd, prefix, out_fd, is_first):
     if os.path.isfile(NM_TMP_FILE) is False:
         return False
     file1 = open(NM_TMP_FILE, 'r')
-    found = True
+    found = False
     while not found:
-        line = file1.readline().strip('\n')
+        line = file1.readline().strip('\n').strip()
         if not line:
             break
-        if symbol == line:
+        if symbol.endswith(line):
             if is_first:
                 out_fd.write(symbol)
                 out_fd.write('\n\t')
