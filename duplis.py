@@ -102,7 +102,7 @@ def find_symbol_from_file(symbol, from_file, nm_file, lib_file, out_fd, is_first
     if os.path.isfile(nm_file) is False:
         print("file " + nm_file + " not found!")
         return False
-    file1 = open(NM_TMP_FILE, 'r')
+    file1 = open(nm_file, 'r')
     found = False
     while not found:
         line = file1.readline().strip('\n').strip()
@@ -146,7 +146,7 @@ def find_duplicate_symbol(symbol, from_file, ldd_file, nm_cmd, grep_word, out_fd
     file1 = open(ldd_file, 'r')
     is_first = True
     while True:
-        line = file1.readline().strip('\n')
+        line = file1.readline().strip('\n').strip()
         if not line:
             break
         ret = find_symbol(symbol, from_file, line, nm_cmd, grep_word, out_fd, is_first)
@@ -183,14 +183,14 @@ def duplis():
 
     ldd_cmd = None
     with open(LDD_FILE) as f:
-        ldd_cmd = f.readline().strip('\n')
+        ldd_cmd = f.readline().strip('\n').strip()
     if not ldd_cmd:
         print("ldd command is missing in " + LDD_FILE + ",  exiting!")
         exit(2)
 
     nm_cmd = None
     with open(NM_FILE) as f:
-        nm_cmd = f.readline().strip('\n')
+        nm_cmd = f.readline().strip('\n').strip()
     if not nm_cmd:
         print("nm command is missing in " + NM_FILE + ",  exiting!")
         exit(2)
@@ -227,13 +227,12 @@ def duplis():
 
     file1 = open(NM_OUT_FILE, 'r')
     while True:
-        symbol = file1.readline().strip('\n')
+        symbol = file1.readline().strip('\n').strip()
         if not symbol:
             break
         print("Looking for duplicate symbols for : ", symbol)
         if args.lfile:
             find_symbol_from_file(symbol, args.ifile, LIB_NM_OUT_FILE, args.lfile, out_fd, True)
-            os.remove(NM_TMP_FILE)
         else:
             find_duplicate_symbol(symbol, args.ifile, LDD_OUT_FILE, nm_cmd, args.grep, out_fd)
     file1.close()
