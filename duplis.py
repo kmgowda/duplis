@@ -230,7 +230,7 @@ def duplis():
         symbol = file1.readline().strip('\n').strip()
         if not symbol:
             break
-        print("Looking for duplicate symbols for :", symbol)
+        print("Looking for duplicate symbols for : "+symbol)
         if args.lfile:
             find_symbol_from_file(symbol, args.ifile, LIB_NM_OUT_FILE, args.lfile, out_fd, True)
         else:
