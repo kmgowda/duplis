@@ -22,7 +22,7 @@ NM_OUT_FILE = os.path.join(TMP_DIR, 'nm.txt')
 NM_TMP_FILE = os.path.join(TMP_DIR, 'nm_tmp.txt')
 
 
-def parse_ldd(ldd_cmd, i_file, tmp_file, ldd_out_file):
+def parse_ldd(ldd_cmd, i_file, tmp_file, ldd_out_file, do_print=False):
     if os.path.isfile(i_file) is False:
         print("file " + i_file + " not found!")
         return
@@ -31,7 +31,8 @@ def parse_ldd(ldd_cmd, i_file, tmp_file, ldd_out_file):
     except:
         pass
     cmd = ldd_cmd + " " + i_file + " > " + tmp_file
-    print("ldd cmd : " + cmd)
+    if do_print:
+        print("ldd cmd : " + cmd)
     os.system(cmd)
     file1 = open(tmp_file, 'r')
     file2 = open(ldd_out_file, 'w')
@@ -57,7 +58,7 @@ def parse_ldd(ldd_cmd, i_file, tmp_file, ldd_out_file):
     os.remove(TMP_FILE)
 
 
-def parse_nm(nm_cmd, prefix, i_file, tmp_file, nm_out_file):
+def parse_nm(nm_cmd, prefix, i_file, tmp_file, nm_out_file, do_print=False):
     if os.path.isfile(i_file) is False:
         print("file " + i_file + " not found!")
         return
@@ -69,7 +70,8 @@ def parse_nm(nm_cmd, prefix, i_file, tmp_file, nm_out_file):
         cmd = nm_cmd + " " + i_file + " > " + tmp_file
     else:
         cmd = nm_cmd + " " + i_file + " | grep " + prefix + " > " + tmp_file
-    print("nm cmd : " + cmd)
+    if do_print:
+        print("nm cmd : " + cmd)
     os.system(cmd)
     file1 = open(tmp_file, 'r')
     file2 = open(nm_out_file, 'w')
